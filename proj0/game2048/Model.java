@@ -5,7 +5,7 @@ import java.util.Observable;
 
 
 /** The state of a game of 2048.
- *  @author TODO: YOUR NAME HERE
+ *  @author Zach Mahl
  */
 public class Model extends Observable {
     /** Current contents of the board. */
@@ -106,19 +106,91 @@ public class Model extends Observable {
      *    value, then the leading two tiles in the direction of motion merge,
      *    and the trailing tile does not.
      * */
+
+
     public boolean tilt(Side side) {
+        // Sets the perspective based off input to tilt
+
         boolean changed;
         changed = false;
 
+        board.setViewingPerspective(side);
+
+        int col_size = board.size();
+        int row_size = board.size();
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+
+        for (int col = 0; col < col_size; col++) {
+            int top_row = row_size - 1;
+            for (int row = row_size - 2; row >= 0; row--) {
+                Tile t = board.tile(col, row);
+                if (t != null) {
+                    Tile top = board.tile(col, top_row);
+                    if(top == null){
+                        board.move(col, top_row, t);
+                    }
+                    else {
+                        if (t.value() == board.tile(col, top_row).value()) {
+                            board.move(col, top_row, t);
+                            score += t.value() * 2;
+                        } else {
+                            board.move(col, top_row - 1, t);
+                        }
+                        top_row--;
+                    }
+                    changed = true;
+
+                }
+
+            }
+        }
+
+        board.setViewingPerspective(Side.NORTH);
 
         checkGameOver();
         if (changed) {
             setChanged();
         }
         return changed;
+    }
+
+    /** Helper function check if there are adjacent equal tiles */
+    private static boolean checkAdjacent(Tile t, Board b, int val){
+        int row = t.row();
+        int col = t.col();
+
+        /** Checks the grid box to the left and right of the current box */
+        for (int i = -1; i <= 1; i++) {
+            int col_inc = col + i;
+
+            if (col_inc < 0 || col_inc >= b.size()) {
+                continue;
+            }
+
+            if (col_inc != col && b.tile(row, col_inc).value() == val){
+                return true;
+            }
+
+            /** When the counter increments to the current box, check the upper and lower box */
+            if (col_inc == col) {
+                for (int j = -1; j <= 1; j++){
+                    int row_inc = row + j;
+
+                    if (row_inc < 0 || row_inc == row || row_inc >= b.size()){
+                        continue;
+                    }
+
+                    if (b.tile(row_inc, col_inc).value() == val) {
+                        return true;
+                    }
+                }
+            }
+
+        }
+
+        return false;
     }
 
     /** Checks if the game is over and sets the gameOver variable
@@ -137,7 +209,16 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+
+        /** Loop over by each row and column on the board using the tile(int row, int col) method */
+        for (int row = 0; row < b.size(); row++){
+            for (int col = 0; col < b.size(); col++){
+                if (b.tile(row, col) == null) {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -147,9 +228,21 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+        /** Loop over by each row and column on the board using the tile(int row, int col) method
+         * Returning true if a single tile is equal to the value 2048 */
+        for (int row = 0; row < b.size(); row++){
+            for (int col = 0; col < b.size(); col++){
+                if (b.tile(row, col) != null) {
+                    if (b.tile(row, col).value() == MAX_PIECE){
+                        return true;
+                    }
+                }
+            }
+        }
+
         return false;
     }
+
 
     /**
      * Returns true if there are any valid moves on the board.
@@ -158,13 +251,23 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
-        return false;
+        /** If not space on the baord is empty, check for adjacent tiles */
+        if (!emptySpaceExists(b)) {
+            for (int row = 0; row < b.size(); row++) {
+                for (int col = 0; col < b.size(); col++) {
+                    if (checkAdjacent(b.tile(row, col), b, b.tile(row, col).value())){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        return true;
     }
 
 
     @Override
-     /** Returns the model as a string, used for debugging. */
+    /** Returns the model as a string, used for debugging. */
     public String toString() {
         Formatter out = new Formatter();
         out.format("%n[%n");
