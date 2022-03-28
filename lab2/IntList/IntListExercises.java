@@ -11,9 +11,12 @@ public class IntListExercises {
     public static void addConstant(IntList lst, int c) {
         IntList head = lst;
         while (head.rest != null) {
-            head.first += c;
+            head.first = head.first + c;
             head = head.rest;
         }
+        /** After addConstant has iterated through the entirety of the linked list adjust the final element*/
+        head.first = head.first + c;
+        head.rest = null;
     }
 
     /**
@@ -26,7 +29,9 @@ public class IntListExercises {
     public static void setToZeroIfMaxFEL(IntList L) {
         IntList p = L;
         while (p != null) {
-            if (firstDigitEqualsLastDigit(max(p))) {
+            int currentMax = max(p);
+            boolean firstEqualsLast = firstDigitEqualsLastDigit(currentMax);
+            if (firstEqualsLast){
                 p.first = 0;
             }
             p = p.rest;
@@ -51,7 +56,7 @@ public class IntListExercises {
      */
     public static boolean firstDigitEqualsLastDigit(int x) {
         int lastDigit = x % 10;
-        while (x > 10) {
+        while (x >= 10) {
             x = x / 10;
         }
         int firstDigit = x % 10;
@@ -73,10 +78,26 @@ public class IntListExercises {
 
         boolean currElemIsPrime = Primes.isPrime(lst.first);
 
+        /** As soon as there is a singular element that is prime, we swap to the isPrimeList */
+        if (currElemIsPrime) {
+            lst.first *= lst.first;
+            return isPrimeList(lst);
+        }
+
+        return squarePrimes(lst.rest);
+    }
+    /** This function will always return true, and iterate over the rest of the list, squaring any remaining primes */
+    public static boolean isPrimeList(IntList lst){
+
+        if (lst == null){
+            return true;
+        }
+
+        boolean currElemIsPrime = Primes.isPrime(lst.first);
+
         if (currElemIsPrime) {
             lst.first *= lst.first;
         }
-
-        return currElemIsPrime || squarePrimes(lst.rest);
+        return isPrimeList(lst.rest);
     }
 }
