@@ -19,9 +19,35 @@ public class TimeAList {
 
     public static void main(String[] args) {
         timeAListConstruction();
+
+
     }
 
     public static void timeAListConstruction() {
         // TODO: YOUR CODE HERE
+
+        //Create the necessary ALists that will be used in printTimingTable
+        AList<Integer> Ns = new AList<>();
+        AList<Double> times = new AList<>();
+        AList<Integer> opCounts = new AList<>();
+
+        int testAListLength = 1000;
+
+        for (int mult_n = testAListLength; mult_n <= 128000; mult_n *= 2) {
+
+            //Add the current length to Ns arraylist
+            Ns.addLast(mult_n);
+            AList<Integer> testAList = new AList<>();
+            Stopwatch sw = new Stopwatch();
+            for (int i = 0; i < mult_n; i++) {
+                testAList.addLast(i);
+            }
+            //Add the time and length to times and opCounts arraylist (opCounts == Length)
+            times.addLast(sw.elapsedTime());
+            opCounts.addLast(mult_n);
+
+        }
+
+        printTimingTable(Ns, times, opCounts);
     }
 }
