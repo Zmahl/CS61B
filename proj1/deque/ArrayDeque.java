@@ -7,6 +7,8 @@ public class ArrayDeque<Item> {
     //Only be able to manipulate these using the methods we give them
     private int size;
     private Item[] items;
+    private int head;
+    private int tail;
 
 
     //Creating the constructor for the ArrayList
@@ -15,6 +17,8 @@ public class ArrayDeque<Item> {
         //We need this syntax to typecast our Object array as an array of type Item
         items = (Item[]) new Object[8];
         size = 0;
+        head = -1;
+        tail = -1;
     }
 
     /**
@@ -25,30 +29,49 @@ public class ArrayDeque<Item> {
         //Create a new generic array to copy all values currently in item with new size [capacity]
         Item[] a = (Item[]) new Object[capacity];
         //Loop through items and copy the values into a
-        for (int i = 0; i < capacity; i++){
-            a[i] = items[i];
-        }
+        System.arraycopy(items, 0, a, 0, size);
         //Set items equal to the new copied array with the new size of a
         items = a;
     }
 
+
+    /**
+     * Function will check if queue is currently full
+     */
+    private boolean isArrayFull() {
+        if (size == items.length){
+            return true;
+        }
+
+        return false;
+
+    }
+
     public void addFirst (Item item){
+
+        size = size + 1;
         //If items array is full, call resize and double the capacity of the array
-        if (size == items.length) {
+        if (isArrayFull()) {
             resize(size * 2);
         }
 
     }
 
     public void addLast (Item item) {
+
         //If items array is full, call resize and double the capacity of the array
         if (size == items.length) {
             resize(size * 2);
         }
+
         //size - 1 is always the current last item in the array, so we set the next item in array
         //using the current size as the index to set the value
         items[size] = item;
         size = size + 1;
+
+        //Pointer to the tail end of the array
+        tail = (tail + 1) % items.length;
+
 
     }
 
@@ -82,11 +105,22 @@ public class ArrayDeque<Item> {
     }
     //Removes and returns the first item
     public Item removeFirst() {
-        return null;
+
+        if ((size < items.length / 4) && (size > 8)) {
+            resize(items.length / 4);
+        }
+        Item returnItem = getFirst();
+        size = size - 1;
+
+
     }
 
     public Item getLast() {
         return items[size - 1];
+    }
+
+    public Item getFirst() {
+        return items[0];
     }
 
     //Removes and returns the last item
@@ -108,5 +142,7 @@ public class ArrayDeque<Item> {
     public Item get(int index) {
         return items[index];
     }
+
+
 
 }
