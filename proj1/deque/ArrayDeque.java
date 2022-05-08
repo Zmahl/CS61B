@@ -60,7 +60,7 @@ public class ArrayDeque<Item> {
     public void addLast (Item item) {
 
         //If items array is full, call resize and double the capacity of the array
-        if (size == items.length) {
+        if (isArrayFull()) {
             resize(size * 2);
         }
 
@@ -112,6 +112,7 @@ public class ArrayDeque<Item> {
         Item returnItem = getFirst();
         size = size - 1;
 
+        return returnItem;
 
     }
 
@@ -125,15 +126,17 @@ public class ArrayDeque<Item> {
 
     //Removes and returns the last item
     public Item removeLast() {
+        //Use getLast as helper
+        Item returnItem = getLast();
+        //Set last element equal to null to save space for array implementation
+        items[size - 1] = null;
+        //Hide object in the array instead of deleting it from the array
+        size = size - 1;
+
         //We are setting a condition to resize the array when it drops to 25% capacity
         if ((size < items.length / 4) && (size > 8)) {
             resize(items.length / 4);
         }
-        //Use getLast as helper
-        Item returnItem = getLast();
-        items[size - 1] = null;
-        //Hide object in the array instead of deleting it from the array
-        size = size - 1;
 
         return returnItem;
 

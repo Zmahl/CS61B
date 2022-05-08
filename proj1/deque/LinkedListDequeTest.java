@@ -38,6 +38,16 @@ public class LinkedListDequeTest {
     }
 
     @Test
+    /** Adds and item to the test, and checks that the size is one */
+    public void simpleAdd() {
+        LinkedListDeque<String> lld = new LinkedListDeque<>();
+        lld.addFirst("Hello");
+
+        assertEquals("Hello", lld.get(0));
+        assertEquals(1, lld.size());
+    }
+
+    @Test
     /** Adds an item, then removes an item, and ensures that dll is empty afterwards. */
     public void addRemoveTest() {
 
@@ -49,9 +59,10 @@ public class LinkedListDequeTest {
 		// should not be empty
 		assertFalse("lld1 should contain 1 item", lld1.isEmpty());
 
-		lld1.removeFirst();
+		assertEquals(10, (int)lld1.removeFirst());
 		// should be empty
 		assertTrue("lld1 should be empty after removal", lld1.isEmpty());
+        lld1.printDeque();
 
     }
 
@@ -137,7 +148,29 @@ public class LinkedListDequeTest {
         lldString.addFirst("goodbye");
         lldString.addFirst("hello");
         lldString.addLast("I am done");
-
+        assertEquals("goodbye", lldString.get(1));
         lldString.printDeque();
+    }
+
+    @Test
+    /* Add elements to the deque, then get recursively using getRecursive */
+
+    public void getRecursiveTest(){
+        LinkedListDeque<Integer> lld = new LinkedListDeque<>();
+        lld.addFirst(1);
+        lld.addFirst(6);
+        lld.addLast(9);
+
+        assertEquals(9, (int) lld.getRecursive(2));
+    }
+
+    @Test
+    public void getRecursiveTestNone(){
+        LinkedListDeque<Integer> lld = new LinkedListDeque<>();
+        lld.addFirst(1);
+        lld.addFirst(6);
+        lld.addLast(9);
+
+        assertEquals(null, lld.getRecursive(3));
     }
 }

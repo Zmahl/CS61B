@@ -5,7 +5,6 @@ import org.junit.Test;
 //Need to make <Item> to allow generic types to be created
 public class LinkedListDeque<Item> {
 
-
     //Make nested private class to create abstraction from the user, prevents it from being manipulated
     //directly. Should be called each time insert item
     private class ListNode {
@@ -22,6 +21,7 @@ public class LinkedListDeque<Item> {
         }
 
     }
+
     // By convention, we have our declarations under the private class
     private int size;
     private Item[] items;
@@ -32,20 +32,25 @@ public class LinkedListDeque<Item> {
 
 
     /**
-     * Creates an empty list
+     * Creates an empty list -- constructor with sentinel
      */
     public LinkedListDeque() {
         size = 0;
         //Create a sentinel so that we do not need to implement a specific case for the first element of the list
         sentinel = new ListNode (null, null, null);
 
-
         //Implementing cyclical sentinel node so that it points to itself as the end of the list
         sentinel.next = sentinel;
         sentinel.prev = sentinel;
 
-
-
+    }
+    /** Helper function for getRecursive function */
+    private Item recursiveFind(int start, int index, ListNode current){
+        //returns the current item when we reach the desired node index
+        if (start == index){
+            return current.item;
+        }
+        return recursiveFind(start + 1, index, current.next);
     }
     //Helper method for removeLast()
     public Item getFirst() {
@@ -112,7 +117,6 @@ public class LinkedListDeque<Item> {
             //Make the second element now point back to the sentinel
             sentinel.next.next.prev = sentinel;
 
-
             //The second element not becomes the first
             sentinel.next = sentinel.next.next;
 
@@ -156,6 +160,11 @@ public class LinkedListDeque<Item> {
     }
 
     public Item get(int index) {
+        if (index >= size){
+            System.out.println("Index out of bounds");
+            return null;
+        }
+
         ListNode temp = sentinel.next;
         int count = 0;
 
@@ -169,6 +178,18 @@ public class LinkedListDeque<Item> {
         }
 
         return null;
+    }
+
+    public Item getRecursive(int index){
+        if (index >= size){
+            System.out.println("Index out of bounds");
+            return null;
+        }
+        else {
+            ListNode temp = sentinel.next;
+            Item item = recursiveFind(0, index, temp);
+            return item;
+        }
     }
 
 
