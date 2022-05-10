@@ -17,8 +17,10 @@ public class ArrayDeque<Item> {
         //We need this syntax to typecast our Object array as an array of type Item
         items = (Item[]) new Object[8];
         size = 0;
+        //Make the front of the array -1, when an element is inserts in the front we increment by 1
         head = -1;
-        tail = -1;
+        //Set the tail to the first index
+        tail = 0;
     }
 
     /**
@@ -52,8 +54,21 @@ public class ArrayDeque<Item> {
         size = size + 1;
         //If items array is full, call resize and double the capacity of the array
         if (isArrayFull()) {
+
             resize(size * 2);
         }
+
+        //Now check if the queue is empty
+        if (head == -1){
+            head = 0;
+            tail = 0;
+        }
+
+        //Implementing a circular array based on geeksforgeeks?
+        else if (head == 0){
+            head = size - 1;
+        }
+
 
     }
 
