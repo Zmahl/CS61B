@@ -8,10 +8,13 @@ public interface Deque<Item> {
     public void printDeque();
     public Item removeFirst();
     public Item removeLast();
-    public int get(int index);
+    public Item get(int index);
 
-    //TODO: Add in the iterator method
-
+    /**Returns whether or not the parameter o is equal ot the Deque
+     * it will be considered equal if it is a Deque and it contains the same contents
+     * @param o
+     * @return
+     */
     public boolean equals(Object o);
 
 }

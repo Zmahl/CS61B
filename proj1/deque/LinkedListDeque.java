@@ -3,7 +3,7 @@ package deque;
 import org.junit.Test;
 
 //Need to make <Item> to allow generic types to be created
-public class LinkedListDeque<Item> {
+public class LinkedListDeque<Item> implements Deque<Item>{
 
     //Make nested private class to create abstraction from the user, prevents it from being manipulated
     //directly. Should be called each time insert item
@@ -191,7 +191,6 @@ public class LinkedListDeque<Item> {
             return item;
         }
     }
-
 
 
 }

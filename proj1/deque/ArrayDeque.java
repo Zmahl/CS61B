@@ -1,14 +1,14 @@
 package deque;
 
-public class ArrayDeque<Item> {
+public class ArrayDeque<Item> implements Deque<Item> {
 
     //Setting our necessary private variables
     //Design pattern to stop users from being able to directly manipulate these, they should
     //Only be able to manipulate these using the methods we give them
     private int size;
     private Item[] items;
-    private int head;
-    private int tail;
+    private int front;
+    private int rear;
 
 
     //Creating the constructor for the ArrayList
@@ -18,9 +18,9 @@ public class ArrayDeque<Item> {
         items = (Item[]) new Object[8];
         size = 0;
         //Make the front of the array -1, when an element is inserts in the front we increment by 1
-        head = -1;
-        //Set the tail to the first index
-        tail = 0;
+        front = -1;
+        //Set the rear to the first index
+        rear = 0;
     }
 
     /**
@@ -41,11 +41,7 @@ public class ArrayDeque<Item> {
      * Function will check if queue is currently full
      */
     private boolean isArrayFull() {
-        if (size == items.length){
-            return true;
-        }
-
-        return false;
+        return ((front == 0 && rear == size-1) || front == rear + 1);
 
     }
 
@@ -59,14 +55,14 @@ public class ArrayDeque<Item> {
         }
 
         //Now check if the queue is empty
-        if (head == -1){
-            head = 0;
-            tail = 0;
+        if (front == -1){
+            front = 0;
+            rear = 0;
         }
 
         //Implementing a circular array based on geeksforgeeks?
-        else if (head == 0){
-            head = size - 1;
+        else if (front == 0){
+            front = size - 1;
         }
 
 
@@ -84,8 +80,8 @@ public class ArrayDeque<Item> {
         items[size] = item;
         size = size + 1;
 
-        //Pointer to the tail end of the array
-        tail = (tail + 1) % items.length;
+        //Pointer to the rear end of the array
+        rear = (rear + 1) % items.length;
 
 
     }
