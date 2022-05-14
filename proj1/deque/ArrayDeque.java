@@ -5,10 +5,11 @@ public class ArrayDeque<Item> implements Deque<Item> {
     //Setting our necessary private variables
     //Design pattern to stop users from being able to directly manipulate these, they should
     //Only be able to manipulate these using the methods we give them
-    private int size;
+    private int length;
     private Item[] items;
     private int front;
     private int rear;
+    private int size;
 
 
     //Creating the constructor for the ArrayList
@@ -16,11 +17,13 @@ public class ArrayDeque<Item> implements Deque<Item> {
         //Generic arrays are not allowed!!!
         //We need this syntax to typecast our Object array as an array of type Item
         items = (Item[]) new Object[8];
-        size = 0;
+        size = items.length;
         //Make the front of the array -1, when an element is inserts in the front we increment by 1
         front = -1;
         //Set the rear to the first index
         rear = 0;
+
+        length = 0;
     }
 
     /**
@@ -40,61 +43,64 @@ public class ArrayDeque<Item> implements Deque<Item> {
     /**
      * Function will check if queue is currently full
      */
-    private boolean isArrayFull() {
+    private boolean isFull() {
+        //The front will be going from the back of the array, and the read will be going from the front
         return ((front == 0 && rear == size-1) || front == rear + 1);
 
     }
 
     public void addFirst (Item item){
 
-        size = size + 1;
-        //If items array is full, call resize and double the capacity of the array
-        if (isArrayFull()) {
-
-            resize(size * 2);
-        }
-
         //Now check if the queue is empty
         if (front == -1){
+            //After changing to 0, now array will be recognized as not empty
             front = 0;
             rear = 0;
         }
 
-        //Implementing a circular array based on geeksforgeeks?
+        //Implementing a circular array based on geeksforgeeks
         else if (front == 0){
             front = size - 1;
         }
 
+        else {
+            //Because front is going from the end of the array to the beginning, will decrement after inserting
+            front = front - 1;
+
+        }
+        //Set index = to item value being passed in
+        items[front] = item;
+
+        length = length + 1;
 
     }
 
     public void addLast (Item item) {
 
-        //If items array is full, call resize and double the capacity of the array
-        if (isArrayFull()) {
-            resize(size * 2);
+        //Check if the array is empty
+        if (front == -1){
+            front = 0;
+            rear = 0;
+        }
+        //Check to see if rear is at the end of the array, if so set it equal to the first index
+        else if (rear == size - 1){
+            rear = 0;
         }
 
-        //size - 1 is always the current last item in the array, so we set the next item in array
-        //using the current size as the index to set the value
-        items[size] = item;
-        size = size + 1;
+        else {
+            rear = rear + 1;
+        }
+        items[rear] = item;
 
-        //Pointer to the rear end of the array
-        rear = (rear + 1) % items.length;
-
-
+        length = length + 1;
     }
 
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return (front == -1);
     }
 
     public int size() {
-        return size;
+        return length;
     }
 
     //Printing generic array in java using the method found here:
@@ -117,41 +123,72 @@ public class ArrayDeque<Item> implements Deque<Item> {
     //Removes and returns the first item
     public Item removeFirst() {
 
-        if ((size < items.length / 4) && (size > 8)) {
-            resize(items.length / 4);
+        if (isEmpty()){
+            System.out.println("Queue is empty");
+            return null;
         }
-        Item returnItem = getFirst();
-        size = size - 1;
 
+        Item returnItem = items[front];
+
+        if ((length < items.length / 4) && (size > 8)) {
+            resize(items.length / 4);
+            System.out.println("full");
+            return null;
+        }
+
+        //This will check if there is only 1 element in the array. This is NOT when it is full
+        if (front == rear){
+            front = -1;
+            rear = -1;
+        }
+
+        else {
+            //Otherwise, just move up the front pointer
+            front = front + 1;
+        }
+        length = length - 1;
         return returnItem;
 
-    }
-
-    public Item getLast() {
-        return items[size - 1];
-    }
-
-    public Item getFirst() {
-        return items[0];
     }
 
     //Removes and returns the last item
     public Item removeLast() {
-        //Use getLast as helper
-        Item returnItem = getLast();
-        //Set last element equal to null to save space for array implementation
-        items[size - 1] = null;
-        //Hide object in the array instead of deleting it from the array
-        size = size - 1;
-
-        //We are setting a condition to resize the array when it drops to 25% capacity
-        if ((size < items.length / 4) && (size > 8)) {
-            resize(items.length / 4);
+        if (isEmpty()){
+            System.out.println("Queue is empty");
+            return null;
         }
 
+        Item returnItem = items[rear];
+        //Reinitialize start values if there is only 1 element currently in the array
+        if (front == rear){
+            front = -1;
+            rear = -1;
+        }
+        else if (rear == 0){
+            rear = size - 1;
+        }
+        else {
+            rear = rear - 1;
+        }
+        length = length - 1;
         return returnItem;
-
     }
+
+    public Item getLast() {
+        if (isEmpty()){
+            return null;
+        }
+        return items[rear];
+    }
+
+    public Item getFirst() {
+        if (isEmpty()){
+            return null;
+        }
+        return items[front];
+    }
+
+
 
     public Item get(int index) {
         return items[index];
