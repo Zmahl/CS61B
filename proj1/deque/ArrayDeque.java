@@ -1,6 +1,6 @@
 package deque;
 
-public class ArrayDeque<Item> implements Deque<Item> {
+public class ArrayDeque<Item> implements Deque<Item>{
 
     //Setting our necessary private variables
     //Design pattern to stop users from being able to directly manipulate these, they should
@@ -11,19 +11,16 @@ public class ArrayDeque<Item> implements Deque<Item> {
     private int rear;
     private int size;
 
-
-    //Creating the constructor for the ArrayList
     public ArrayDeque() {
         //Generic arrays are not allowed!!!
         //We need this syntax to typecast our Object array as an array of type Item
         items = (Item[]) new Object[8];
-        size = items.length;
+        size = 0;
         //Make the front of the array -1, when an element is inserts in the front we increment by 1
         front = -1;
         //Set the rear to the first index
         rear = 0;
 
-        length = 0;
     }
 
     /**
@@ -50,15 +47,12 @@ public class ArrayDeque<Item> implements Deque<Item> {
     }
 
     public void addFirst (Item item){
-
-        //Now check if the queue is empty
-        if (front == -1){
+        if (isEmpty()){
             //After changing to 0, now array will be recognized as not empty
             front = 0;
             rear = 0;
         }
-
-        //Implementing a circular array based on geeksforgeeks
+        //Front will be coming from the back of the underlying array
         else if (front == 0){
             front = size - 1;
         }
@@ -71,7 +65,7 @@ public class ArrayDeque<Item> implements Deque<Item> {
         //Set index = to item value being passed in
         items[front] = item;
 
-        length = length + 1;
+        size = size + 1;
 
     }
 
@@ -92,7 +86,7 @@ public class ArrayDeque<Item> implements Deque<Item> {
         }
         items[rear] = item;
 
-        length = length + 1;
+        size = size + 1;
     }
 
     public boolean isEmpty() {
@@ -100,12 +94,11 @@ public class ArrayDeque<Item> implements Deque<Item> {
     }
 
     public int size() {
-        return length;
+        return size;
     }
 
     //Printing generic array in java using the method found here:
     //http://www.java2s.com/Tutorial/Java/0200__Generics/Usinggenericmethodstoprintarrayofdifferenttypes.htm
-
     public void printDeque() {
         int count = 0;
         for (Item element : items) {
@@ -120,7 +113,11 @@ public class ArrayDeque<Item> implements Deque<Item> {
         System.out.println();
 
     }
-    //Removes and returns the first item
+
+    /**
+     * Pops the first item, sets the index to null and decrements front
+     * @return item at the last index
+     */
     public Item removeFirst() {
 
         if (isEmpty()){
@@ -128,30 +125,31 @@ public class ArrayDeque<Item> implements Deque<Item> {
             return null;
         }
 
+        //Create a variable to hold the value at the index, then set to null
         Item returnItem = items[front];
+        items[front] = null;
 
-        if ((length < items.length / 4) && (size > 8)) {
+        if ((size < items.length / 4) && (size >= 16)) {
             resize(items.length / 4);
             System.out.println("full");
-            return null;
         }
-
         //This will check if there is only 1 element in the array. This is NOT when it is full
         if (front == rear){
             front = -1;
             rear = -1;
         }
-
         else {
-            //Otherwise, just move up the front pointer
             front = front + 1;
         }
-        length = length - 1;
+        size = size - 1;
         return returnItem;
 
     }
 
-    //Removes and returns the last item
+    /**
+     * Removes and returns the last item in the array, setting it to null and incrementing rear
+     * @return the last Item in the array
+     */
     public Item removeLast() {
         if (isEmpty()){
             System.out.println("Queue is empty");
@@ -170,7 +168,7 @@ public class ArrayDeque<Item> implements Deque<Item> {
         else {
             rear = rear - 1;
         }
-        length = length - 1;
+        size = size - 1;
         return returnItem;
     }
 
@@ -187,8 +185,6 @@ public class ArrayDeque<Item> implements Deque<Item> {
         }
         return items[front];
     }
-
-
 
     public Item get(int index) {
         return items[index];
