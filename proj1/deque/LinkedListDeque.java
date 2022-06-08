@@ -3,18 +3,18 @@ package deque;
 import org.junit.Test;
 
 //Need to make <Item> to allow generic types to be created
-public class LinkedListDeque<Item> implements Deque<Item>{
+public class LinkedListDeque<T> implements Deque<T>{
 
     //Make nested private class to create abstraction from the user, prevents it from being manipulated
     //directly. Should be called each time insert item
     private class ListNode {
         // specify type <Item> as a private class
-        private Item item;
+        private T item;
         private ListNode next;
         private ListNode prev;
 
         //Constructor for our private List node
-        private ListNode(Item i, ListNode n, ListNode p) {
+        private ListNode(T i, ListNode n, ListNode p) {
             item = i;
             next = n;
             prev = p;
@@ -24,7 +24,7 @@ public class LinkedListDeque<Item> implements Deque<Item>{
 
     // By convention, we have our declarations under the private class
     private int size;
-    private Item[] items;
+    private T[] items;
 
     //Using circular sentinel, so I do not need a pointer for the first and last value, as the sentinel
     // will be keeping track of both of them.
@@ -45,7 +45,7 @@ public class LinkedListDeque<Item> implements Deque<Item>{
 
     }
     /** Helper function for getRecursive function */
-    private Item recursiveFind(int start, int index, ListNode current){
+    private T recursiveFind(int start, int index, ListNode current){
         //returns the current item when we reach the desired node index
         if (start == index){
             return current.item;
@@ -53,16 +53,17 @@ public class LinkedListDeque<Item> implements Deque<Item>{
         return recursiveFind(start + 1, index, current.next);
     }
     //Helper method for removeLast()
-    public Item getFirst() {
+    public T getFirst() {
         return sentinel.next.item;
     }
 
     //Helper method for removeFirst()
-    public Item getLast() {
+    public T getLast() {
         return sentinel.prev.item;
     }
 
-    public void addFirst(Item x) {
+    @Override
+    public void addFirst(T x) {
         // Instantiate the new first node and put it at the front of the list
         ListNode first = new ListNode(x, sentinel.next, sentinel);
 
@@ -73,8 +74,8 @@ public class LinkedListDeque<Item> implements Deque<Item>{
 
         size = size + 1;
     }
-
-    public void addLast(Item x) {
+    @Override
+    public void addLast(T x) {
         //Create a new last value that will point to the sentinel node
         ListNode last = new ListNode(x, sentinel, sentinel.prev);
 
@@ -85,14 +86,7 @@ public class LinkedListDeque<Item> implements Deque<Item>{
         size = size + 1;
     }
 
-    public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-
-        return false;
-    }
-
+    @Override
     public void printDeque() {
         ListNode temp = sentinel.next;
 
@@ -105,12 +99,13 @@ public class LinkedListDeque<Item> implements Deque<Item>{
     /**
      * Removes and returns the item at the front of the deque
      */
-    public Item removeFirst() {
+    @Override
+    public T removeFirst() {
 
         //Checks size to see if sentinel is currently pointing to itself.
         if (size > 0){
 
-            Item first_item = getFirst();
+            T first_item = getFirst();
             //Removes the pointer from the first element to the sentinel
             sentinel.next.prev = null;
 
@@ -131,11 +126,12 @@ public class LinkedListDeque<Item> implements Deque<Item>{
     /**
      * Removes and returns the item in the back of the deque
      */
-    public Item removeLast() {
+    @Override
+    public T removeLast() {
         //Checks size to see if sentinel is currently pointing to itself.
         if (size > 0){
 
-            Item last_item = getLast();
+            T last_item = getLast();
             //Change the last element's next to point to null
             sentinel.prev.next = null;
 
@@ -155,11 +151,13 @@ public class LinkedListDeque<Item> implements Deque<Item>{
      * Public getter used to return the size, as it is private to prevent direct manipulation
      * @return
      */
+    @Override
     public int size() {
         return size;
     }
 
-    public Item get(int index) {
+    @Override
+    public T get(int index) {
         if (index >= size){
             System.out.println("Index out of bounds");
             return null;
@@ -180,14 +178,14 @@ public class LinkedListDeque<Item> implements Deque<Item>{
         return null;
     }
 
-    public Item getRecursive(int index){
+    public T getRecursive(int index){
         if (index >= size){
             System.out.println("Index out of bounds");
             return null;
         }
         else {
             ListNode temp = sentinel.next;
-            Item item = recursiveFind(0, index, temp);
+            T item = recursiveFind(0, index, temp);
             return item;
         }
     }
