@@ -27,7 +27,29 @@ public class ArrayDeque<T> implements Deque<T> {
 
 
     private void resize(int capacity) {
+        T[] newItems = (T[]) new Object[capacity];
+        /**
+         * Copy from nextFirst until we hit the end of the array
+         * Upon hitting the end of the array, we will then go to the
+         * First index and go until nextLast
+         */
 
+        if (nextFirst < nextLast - 1 || nextFirst == items.length - 1) {
+            if (nextFirst == items.length - 1){
+                nextFirst = -1;
+            }
+
+            System.arraycopy(items, nextFirst + 1, newItems, 0, size);
+
+        }
+        else {
+            System.arraycopy(items, nextFirst + 1, newItems, 0, items.length - 1 - nextFirst);
+            System.arraycopy(items, 0, newItems, items.length - 1 - nextFirst, nextLast);
+        }
+
+        nextLast = size;
+        nextFirst = newItems.length - 1;
+        items = newItems;
     }
 
     @Override
