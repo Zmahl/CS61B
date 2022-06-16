@@ -1,6 +1,6 @@
 package deque;
 
-import org.junit.Test;
+import java.util.Iterator;
 
 //Need to make <Item> to allow generic types to be created
 public class LinkedListDeque<T> implements Deque<T>{
@@ -44,6 +44,7 @@ public class LinkedListDeque<T> implements Deque<T>{
         sentinel.prev = sentinel;
 
     }
+
     /** Helper function for getRecursive function */
     private T recursiveFind(int start, int index, ListNode current){
         //returns the current item when we reach the desired node index
@@ -189,7 +190,6 @@ public class LinkedListDeque<T> implements Deque<T>{
             return item;
         }
     }
-
 
 
 }

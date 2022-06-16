@@ -2,8 +2,6 @@ package deque;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-
 import static org.junit.Assert.*;
 
 /** Performs some basic arraylist tests */
@@ -62,7 +60,8 @@ public class ArrayDequeTest {
         // should not be empty
         assertFalse("lld1 should contain 1 item", lld1.isEmpty());
 
-        assertEquals(10, (int)lld1.removeFirst());
+        assertEquals(10,
+                (int)lld1.removeFirst());
         // should be empty
         assertTrue("lld1 should be empty after removal", lld1.isEmpty());
         lld1.printDeque();
@@ -153,18 +152,6 @@ public class ArrayDequeTest {
         lldString.addLast("I am done");
         assertEquals("goodbye", lldString.get(1));
         lldString.printDeque();
-    }
-
-    @Test
-    /* Add elements to the deque, then get recursively using getRecursive */
-
-    public void getRecursiveTest(){
-        ArrayDeque<Integer> lld = new ArrayDeque<>();
-        lld.addFirst(1);
-        lld.addFirst(6);
-        lld.addLast(9);
-
-        assertEquals(9, (int) lld.get(2));
     }
 
 }
