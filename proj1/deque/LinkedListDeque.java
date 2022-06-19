@@ -3,7 +3,7 @@ package deque;
 import java.util.Iterator;
 
 //Need to make <Item> to allow generic types to be created
-public class LinkedListDeque<T> implements Deque<T>{
+public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
 
     //Make nested private class to create abstraction from the user, prevents it from being manipulated
     //directly. Should be called each time insert item
@@ -92,9 +92,10 @@ public class LinkedListDeque<T> implements Deque<T>{
         ListNode temp = sentinel.next;
 
         while (temp != sentinel){
-            System.out.println(temp.item);
+            System.out.println(temp.item.toString() + " ");
             temp = temp.next;
         }
+        System.out.println();
     }
 
     /**
@@ -179,6 +180,29 @@ public class LinkedListDeque<T> implements Deque<T>{
         return null;
     }
 
+    @Override
+    public boolean equals(Object obj){
+        //This checks if the object is compared with itself
+        if (obj ==  this) {
+            return true;
+        }
+        //Checks to see if the object being passed if of type deque
+        if (!(obj instanceof Deque)){
+            return false;
+        }
+        //Declare a new variable and Typecast object to a deque
+        Deque o = (Deque) obj;
+
+        for (int i = 0; i < size; i++){
+            //Checks if the objects return the same node and that the node values are equivalent
+            if (this.get(i) != o.get(i) && !this.get(i).equals(o.get(i))){
+                return false;
+            }
+
+        }
+        return true;
+    }
+
     public T getRecursive(int index){
         if (index >= size){
             System.out.println("Index out of bounds");
@@ -188,6 +212,26 @@ public class LinkedListDeque<T> implements Deque<T>{
             ListNode temp = sentinel.next;
             T item = recursiveFind(0, index, temp);
             return item;
+        }
+    }
+
+    public Iterator<T> iterator() {
+        return new LinkedListIterator();
+    }
+
+    private class LinkedListIterator implements Iterator<T> {
+        private ListNode pointer;
+
+        LinkedListIterator() {
+            pointer = sentinel;
+        }
+        public boolean hasNext() {
+            return pointer.next != null && pointer.next != sentinel;
+        }
+
+        public T next() {
+            pointer = pointer.next;
+            return pointer.item;
         }
     }
 

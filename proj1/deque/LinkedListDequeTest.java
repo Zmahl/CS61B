@@ -122,7 +122,7 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /* Add large number of elements to deque; check if order is correct. */
+    /* Add large number of items to deque; check if order is correct. */
     public void bigLLDequeTest() {
 
         LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
@@ -141,7 +141,7 @@ public class LinkedListDequeTest {
 
     }
     @Test
-    /* Add elements to the deque; then print out the elements. */
+    /* Add items to the deque; then print out the items. */
 
     public void printDequeTest() {
         LinkedListDeque<String> lldString = new LinkedListDeque<>();
@@ -153,7 +153,7 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /* Add elements to the deque, then get recursively using getRecursive */
+    /* Add items to the deque, then get recursively using getRecursive */
 
     public void getRecursiveTest(){
         LinkedListDeque<Integer> lld = new LinkedListDeque<>();

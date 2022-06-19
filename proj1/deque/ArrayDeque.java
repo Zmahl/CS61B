@@ -3,12 +3,12 @@ package deque;
 import java.util.Iterator;
 
 public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
-    private T[] elements;
+    private T[] items;
     private int startIndex;
     private int endIndex;
 
     public ArrayDeque() {
-        elements = (T[]) new Object[8];
+        items = (T[]) new Object[8];
         startIndex = 3;
         endIndex = 4;
     }
@@ -20,7 +20,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     @Override
     public void addFirst(T item) {
         resize();
-        elements[startIndex--] = item;
+        items[startIndex--] = item;
     }
 
     /**
@@ -29,7 +29,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     @Override
     public void addLast(T item) {
         resize();
-        elements[endIndex++] = item;
+        items[endIndex++] = item;
     }
 
     /**
@@ -46,7 +46,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     @Override
     public void printDeque() {
         for (int i = startIndex + 1; i < endIndex; i++) {
-            System.out.print(elements[i].toString() + " ");
+            System.out.print(items[i].toString() + " ");
         }
         System.out.println();
     }
@@ -60,7 +60,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         if (size() == 0) {
             return null;
         }
-        T item = elements[++startIndex];
+        T item = items[++startIndex];
         resize();
         return item;
     }
@@ -74,7 +74,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         if (size() == 0) {
             return null;
         }
-        T item = elements[--endIndex];
+        T item = items[--endIndex];
         resize();
         return item;
     }
@@ -89,66 +89,64 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         if (index < 0 || index >= size) {
             return null;
         }
-        return elements[startIndex + index + 1];
+        return items[startIndex + index + 1];
     }
 
     /**
      * when factor is very low or very high,
-     * build a new array and copy the elements to the new array.
+     * build a new array and copy the items to the new array.
      */
     private void resize() {
-        int length = elements.length;
+        int length = items.length;
         int size = size();
         double factor = size / (length + 0.0);
         int newLength;
         if (factor < 0.25 && length > 16) {
-            //make size of elements small
-            T[] newElements = (T[]) new Object[length / 2];
-            cpElements(newElements);
-            elements = newElements;
+            //make size of items small
+            T[] newitems = (T[]) new Object[length / 2];
+            cpitems(newitems);
+            items = newitems;
         }
         if (factor >= 0.85) {
-            //make size of elements large
-            T[] newElements = (T[]) new Object[length * 2];
-            cpElements(newElements);
-            elements = newElements;
+            //make size of items large
+            T[] newitems = (T[]) new Object[length * 2];
+            cpitems(newitems);
+            items = newitems;
         }
-        if (startIndex <= 0 || endIndex >= elements.length - 1) {
+        if (startIndex <= 0 || endIndex >= items.length - 1) {
             //when only addFirst or addLast
-            T[] newElements = (T[]) new Object[length];
-            cpElements(newElements);
-            elements = newElements;
+            T[] newitems = (T[]) new Object[length];
+            cpitems(newitems);
+            items = newitems;
         }
     }
 
     /**
-     * build a new array and copy the elements to the new array.
+     * build a new array and copy the items to the new array.
      */
 
-    private void cpElements(T[] newElements) {
-        int length = newElements.length;
+    private void cpitems(T[] newitems) {
+        int length = newitems.length;
         int index = startIndex + 1;
         int size = size();
         startIndex = (length - size()) / 2 - 1;
         for (int i = 0; i < size; ++i) {
-            newElements[startIndex + i + 1] = elements[index++];
+            newitems[startIndex + i + 1] = items[index++];
         }
         endIndex = startIndex + size + 1;
     }
 
-    @Override
+
     public Iterator<T> iterator() {
         return new ArrayDequeIterator();
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj) { 
         if (obj == this) {
             return true;
         }
-        if (obj == null) {
-            return false;
-        }
+
         if (!(obj instanceof Deque)) {
             return false;
         }
@@ -179,7 +177,9 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
 
         @Override
         public T next() {
-            return get(index++);
+            T returnItem = items[index];
+            index += 1;
+            return returnItem;
         }
     }
 }
