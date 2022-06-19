@@ -138,6 +138,10 @@ public class LinkedListDequeTest {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
 
+        for (int i = 0; i < 50000; i++){
+            lld1.getRecursive(i);
+        }
+
 
     }
     @Test

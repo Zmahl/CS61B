@@ -29,8 +29,6 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
     //Using circular sentinel, so I do not need a pointer for the first and last value, as the sentinel
     // will be keeping track of both of them.
     private ListNode sentinel;
-
-
     /**
      * Creates an empty list -- constructor with sentinel
      */
@@ -42,24 +40,23 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         //Implementing cyclical sentinel node so that it points to itself as the end of the list
         sentinel.next = sentinel;
         sentinel.prev = sentinel;
-
     }
 
     /** Helper function for getRecursive function */
-    private T recursiveFind(int start, int index, ListNode current){
+    private T recursiveFind(int start, int index, ListNode current) {
         //returns the current item when we reach the desired node index
-        if (start == index){
+        if (start == index) {
             return current.item;
         }
         return recursiveFind(start + 1, index, current.next);
     }
     //Helper method for removeLast()
-    public T getFirst() {
+    private T getFirst() {
         return sentinel.next.item;
     }
 
     //Helper method for removeFirst()
-    public T getLast() {
+    private T getLast() {
         return sentinel.prev.item;
     }
 
@@ -71,8 +68,6 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         //Now handling switching the pointers for the previous first
         sentinel.next.prev = first;
         sentinel.next = first;
-
-
         size = size + 1;
     }
     @Override
@@ -107,7 +102,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         //Checks size to see if sentinel is currently pointing to itself.
         if (size > 0){
 
-            T first_item = getFirst();
+            T firstItem = getFirst();
             //Removes the pointer from the first element to the sentinel
             sentinel.next.prev = null;
 
@@ -119,7 +114,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
 
             size = size - 1;
 
-            return first_item;
+            return firstItem;
         }
 
         return null;
@@ -133,7 +128,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         //Checks size to see if sentinel is currently pointing to itself.
         if (size > 0){
 
-            T last_item = getLast();
+            T lastItem = getLast();
             //Change the last element's next to point to null
             sentinel.prev.next = null;
 
@@ -142,7 +137,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
 
             size = size - 1;
 
-            return last_item;
+            return lastItem;
         }
 
         return null;
@@ -160,7 +155,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
 
     @Override
     public T get(int index) {
-        if (index >= size){
+        if (index >= size || index < 0){
             System.out.println("Index out of bounds");
             return null;
         }
@@ -172,7 +167,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
             if (count == index) {
                 return temp.item;
             }
-            //Goes to the next node and increases the count until index is found, or we hit the end of the list
+            //Goes to next node and increase count until index
             temp = temp.next;
             count = count + 1;
         }
@@ -193,8 +188,11 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         //Declare a new variable and Typecast object to a deque
         Deque o = (Deque) obj;
 
+        if (this.size() != o.size()){
+            return false;
+        }
         for (int i = 0; i < size; i++){
-            //Checks if the objects return the same node and that the node values are equivalent
+            //Checks if the objects return the same node and node vals equal
             if (this.get(i) != o.get(i) && !this.get(i).equals(o.get(i))){
                 return false;
             }
@@ -204,7 +202,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
     }
 
     public T getRecursive(int index){
-        if (index >= size){
+        if (index >= size || index < 0){
             System.out.println("Index out of bounds");
             return null;
         }
