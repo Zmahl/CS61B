@@ -72,8 +72,8 @@ public class CapersRepository {
         // TODO
         //Make a instantiation of the dog
         Dog d = new Dog(name, breed, age);
-        d.toString();
         d.saveDog();
+        System.out.println(d.toString());
     }
 
     /**
@@ -86,7 +86,6 @@ public class CapersRepository {
         // TODO
         Dog d = Dog.fromFile(name);
         d.haveBirthday();
-        d.toString();
         d.saveDog();
     }
 }
