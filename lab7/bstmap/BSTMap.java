@@ -25,37 +25,50 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     public BSTMap() {
         size = 0;
     }
-
+    @Override
     public void clear(){
         throw new UnsupportedOperationException("Invalid Operation");
     }
-
+    @Override
     public boolean containsKey(K key){
         throw new UnsupportedOperationException("Invalid Operation");
     }
-
+    @Override
     public V get(K key){
-        throw new UnsupportedOperationException("Invalid Operation");
-    }
+        BSTNode T = root;
+        if (T == null){
+            return null;
+        }
+        if (T.key == key){
+            return T.value;
+        }
+        else if (T.key < key) {
 
+        }
+    }
+    @Override
     public int size() {
         return size;
     }
-
+    @Override
     public void put(K key, V value){
         throw new UnsupportedOperationException("Invalid Operation");
     }
-
+    @Override
     public Set<K> keySet(){
         throw new UnsupportedOperationException("Invalid Operation");
     }
-
+    @Override
     public V remove(K key){
         throw new UnsupportedOperationException("Invalid Operation");
     }
-
+    @Override
     public V remove(K key, V value){
         throw new UnsupportedOperationException("Invalid Operation");
+    }
+
+    public void printInOrder(){
+
     }
 
 }
