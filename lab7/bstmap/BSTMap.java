@@ -35,9 +35,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         if (x == null) {
             return 0;
         }
-        else {
-            return x.size;
-        }
+        return x.size;
     }
     private V get(BSTNode x, K key){
         if (key == null){
@@ -53,20 +51,43 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         else return x.value;
     }
 
+    private boolean contains(BSTNode x, K key){
+        if (key == null) throw new IllegalArgumentException("Key is null");
+        if (x == null) return false;
+        int cmp = key.compareTo(x.key);
+
+        if (cmp == 0){
+            return true;
+        }
+
+        else if (cmp < 0){
+            return contains(x.left, key);
+        }
+
+        else if (cmp > 0) {
+            return contains(x.right, key);
+        }
+
+        return false;
+    }
+
     private BSTNode put (BSTNode x, K key, V value) {
         if (x == null) return new BSTNode(key, value, 1);
         int cmp = key.compareTo(x.key);
 
+        if (cmp == 0){
+            x.value = value;
+        }
         //Always set these equal, trust the recursion
-        if (cmp < 0){
+        else if (cmp < 0){
             x.left = put(x.left, key, value);
         }
         else if (cmp > 0){
             x.right = put(x.right, key, value);
         }
-        else {
-            x.size =  1 + size(x.left) + size(x.right);
-        }
+
+        x.size = 1 + size(x.left) + size(x.right);
+
         return x;
     }
 
@@ -117,7 +138,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             throw new IllegalArgumentException("argument is null key");
         }
         //Uses the public key function to see if the tree contains the available results
-        return (get(key) != null);
+        return contains(root, key);
     }
     @Override
     public V get(K key){
@@ -125,16 +146,12 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     }
     @Override
     public int size() {
-        return size(root);
+        return size(this.root);
     }
 
     @Override
     public void put(K key, V value){
         if (key == null) throw new IllegalArgumentException();
-        if (value == null) {
-            remove(key);
-            return;
-        }
 
         root = put(root, key, value);
     }
