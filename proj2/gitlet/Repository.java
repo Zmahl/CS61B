@@ -2,6 +2,8 @@ package gitlet;
 
 import java.io.File;
 import static gitlet.Utils.*;
+import java.io.IOException;
+
 
 // TODO: any imports you need here
 
@@ -26,4 +28,17 @@ public class Repository {
     public static final File GITLET_DIR = join(CWD, ".gitlet");
 
     /* TODO: fill in the rest of this class. */
+
+    /**
+     * TODO: create initial commit
+     * TODO: create the .gitlet directory
+     * TODO: create all the rest of the things in gitlet
+     * TODO: Fail if .gitlet alread exists in the current directory
+     */
+    public static void initializeRepo(){
+        GITLET_DIR.mkdir();
+        Commit initialCommit = new Commit();
+        File initialCommitFile = join(GITLET_DIR, "initialCommit");
+        writeObject(initialCommitFile, initialCommit);
+    }
 }
