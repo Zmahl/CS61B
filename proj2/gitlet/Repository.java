@@ -3,6 +3,7 @@ package gitlet;
 import java.io.File;
 import static gitlet.Utils.*;
 import java.io.IOException;
+import java.util.Date;
 
 
 // TODO: any imports you need here
@@ -40,5 +41,17 @@ public class Repository {
         Commit initialCommit = new Commit();
         File initialCommitFile = join(GITLET_DIR, "initialCommit");
         writeObject(initialCommitFile, initialCommit);
+    }
+
+    public static void add(File f) {
+
+    }
+
+    public static void makeBlob() {
+
+    }
+
+    public static void newCommit(String message, Date timestamp) {
+
     }
 }

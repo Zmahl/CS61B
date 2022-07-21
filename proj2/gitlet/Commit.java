@@ -29,11 +29,21 @@ public class Commit implements Serializable{
     /** Something with the files to track */
     // TODO: add variable for this here
 
+    /** Has a pointer to the parent of the current commit */
+    Commit parent;
+
     /** Makes the initial commit */
     public Commit() {
         this.message = "initial commit";
         this.timestamp = new Date(0); //Creates a date object for the epoch date
     }
     /* TODO: fill in the rest of this class. */
+
+    /** Constructor for all other commits */
+    public Commit(String message, Date timestamp, Commit parent){
+        this.message = message;
+        this.timestamp = timestamp;
+        this.parent = parent;
+    }
 
 }
