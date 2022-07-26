@@ -1,8 +1,13 @@
 package hashmap;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  *  A hash table-backed Map implementation. Provides amortized constant time
@@ -20,6 +25,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     private int initialSize;
     private double loadFactor;
+    private HashSet<K> keyHolder;
 
     protected class Node {
         K key;
@@ -37,13 +43,13 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     /** Constructors */
     public MyHashMap() {
-        initialSize = 16;
-        loadFactor = 0.75;
+        this(16, 0.75);
+
     }
 
     public MyHashMap(int initialSize) {
-        this.initialSize = initialSize;
-        loadFactor = 0.75;
+        //This() calls the constructor (int initialSize, double maxLoad)
+        this(initialSize, 0.75);
     }
 
     /**
@@ -55,7 +61,13 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     public MyHashMap(int initialSize, double maxLoad) {
         this.initialSize = initialSize;
-        this.loadFactor = loadFactor;
+        this.loadFactor = maxLoad;
+        //We have to use collection here so that it can be casted with ArrayList, LinkedList, etc.
+        buckets = new Collection[initialSize];
+
+        for (int i = 0; i < initialSize; i++) {
+            buckets[i] = createBucket();
+        }
     }
 
     /**
@@ -84,7 +96,8 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * OWN BUCKET DATA STRUCTURES WITH THE NEW OPERATOR!
      */
     protected Collection<Node> createBucket() {
-        return null;
+
+
     }
 
     /**
@@ -122,7 +135,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     }
 
     /** Returns the number of key-value mappings in this map. */
-    public int size(){s
+    public int size(){
         throw new UnsupportedOperationException();
     }
 
@@ -145,6 +158,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * Not required for Lab 8. If you don't implement this, throw an
      * UnsupportedOperationException.
      */
+    //This method does not need to be implemented
     public V remove(K key){
         throw new UnsupportedOperationException();
     }
@@ -154,20 +168,28 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * the specified value. Not required for Lab 8. If you don't implement this,
      * throw an UnsupportedOperationException.
      */
+    //This method does not need to be implemented
     public V remove(K key, V value){
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public Iterator<K> iterator() {
         return new HashMapIterator();
     }
 
-    private class HashMapIterator() implements Iterator<K> {
+    private class HashMapIterator implements Iterator<K> {
         private int index;
 
         HashMapIterator(){
             index = 0;
         }
+
+        @Override
+        public boolean hasNext(){ return false; }
+
+        @Override
+        public K next() { return null; }
 
     }
 }
