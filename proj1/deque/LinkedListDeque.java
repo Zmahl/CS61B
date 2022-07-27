@@ -24,7 +24,6 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
 
     // By convention, we have our declarations under the private class
     private int size;
-    private T[] items;
 
     //Using circular sentinel, so I do not need a pointer for the first and last value, as the sentinel
     // will be keeping track of both of them.
