@@ -1,5 +1,7 @@
 package hashmap;
 
+import com.sun.jdi.Value;
+
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.HashSet;
+
 
 
 /**
@@ -24,10 +27,14 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * The protected qualifier allows subclass access
      */
 
-    private int initialSize;
+    private static final int INIT_CAPACITY = 16;
+    private static double INIT_LOAD = 0.75;
+
+    private int m;
     private double loadFactor;
-    private HashSet<K> keyHolder;
-    private int numberKeys;
+    private int n;
+
+
 
     protected class Node {
         K key;
@@ -45,13 +52,13 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     /** Constructors */
     public MyHashMap() {
-        this(16, 0.75);
+        this(INIT_CAPACITY, INIT_LOAD);
 
     }
 
     public MyHashMap(int initialSize) {
         //This() calls the constructor (int initialSize, double maxLoad)
-        this(initialSize, 0.75);
+        this(initialSize, INIT_LOAD);
     }
 
     /**
@@ -62,9 +69,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * @param maxLoad maximum load factor
      */
     public MyHashMap(int initialSize, double maxLoad) {
-        this.initialSize = initialSize;
+        this.m = initialSize;
         this.loadFactor = maxLoad;
-        numberKeys = 0;
+        n = 0;
         //We have to use collection here so that it can be casted with ArrayList, LinkedList, etc.
         buckets = new Collection[initialSize];
 
@@ -117,12 +124,37 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         return null;
     }
 
-    private int hashCode(K key) {
-        return -1;
+    /**
+     * Returns index where the key should be placed in relation to it's hash value
+     * @param key
+     * @return
+     */
+    private int determineBucket(K key) {
+        return Math.floorMod(key.hashCode(), buckets.length);
     }
 
-    private void resize(int initialSize) {
+    private void resize(int size) {
 
+    }
+
+    /**
+     * Method that will check over the existing keys within the hashmap and return the Node
+     * @param key
+     * @return
+     */
+    private Node getNode(K key) {
+        if (n == 0) {
+            return null;
+        }
+
+        int index = determineBucket(key);
+        //Now use the for each loop to interact with the buckets
+        for (Node n : buckets[index]) {
+            if (n.key.equals(key)){
+                return n;
+            }
+        }
+        return null;
     }
 
     // TODO: Implement the methods of the Map61B Interface below
@@ -135,7 +167,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
             buckets[i].clear();
         }
 
-        numberKeys = 0;
+        n = 0;
     };
 
     /** Returns true if this map contains a mapping for the specified key. */
@@ -155,7 +187,14 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         if (key == null) {
             throw new IllegalArgumentException("Invalid key provided");
         }
-        return null;
+
+        Node n = getNode(key);
+
+        if (n == null){
+            return null;
+        }
+
+        return n.value;
     }
 
     /** Returns the number of key-value mappings in this map. */
@@ -172,12 +211,22 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         if (key == null) {
             throw new IllegalArgumentException("Invalid key provided");
         }
-        throw new UnsupportedOperationException();
+        //TODO Boolean to check if there is a search that must happen
+        Node item = createNode(key, value);
+        int index = determineBucket(key);
+        buckets[bucket].add(item);
+        n = n + 1;
     }
 
     /** Returns a Set view of the keys contained in this map. */
     public Set<K> keySet(){
-        throw new UnsupportedOperationException();
+        Set<K> set = new HashSet<>();
+        for (Collection<Node> items : buckets) {
+            for (Node node : items) {
+                set.add(node.key);
+            }
+        }
+        return set;
     }
 
     /**
@@ -185,11 +234,12 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * Not required for Lab 8. If you don't implement this, throw an
      * UnsupportedOperationException.
      */
-    //This method does not need to be implemented
+
     public V remove(K key){
         if (key == null) {
             throw new IllegalArgumentException("Invalid key provided");
         }
+
         throw new UnsupportedOperationException();
     }
 
