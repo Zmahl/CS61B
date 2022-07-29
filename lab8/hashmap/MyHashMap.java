@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+
 /**
  *  A hash table-backed Map implementation. Provides amortized constant time
  *  access to elements via get(), remove(), and put() in the best case.
@@ -26,6 +27,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     private int initialSize;
     private double loadFactor;
     private HashSet<K> keyHolder;
+    private int numberKeys;
 
     protected class Node {
         K key;
@@ -62,6 +64,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     public MyHashMap(int initialSize, double maxLoad) {
         this.initialSize = initialSize;
         this.loadFactor = maxLoad;
+        numberKeys = 0;
         //We have to use collection here so that it can be casted with ArrayList, LinkedList, etc.
         buckets = new Collection[initialSize];
 
@@ -96,7 +99,8 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * OWN BUCKET DATA STRUCTURES WITH THE NEW OPERATOR!
      */
     protected Collection<Node> createBucket() {
-
+        //I am going to create a bucket of linked lists, therefore my buckets are linked lists
+        return new LinkedList<>();
 
     }
 
@@ -113,16 +117,33 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         return null;
     }
 
+    private int hashCode(K key) {
+        return -1;
+    }
+
+    private void resize(int initialSize) {
+
+    }
+
     // TODO: Implement the methods of the Map61B Interface below
     // Your code won't compile until you do so!
     /** Removes all of the mappings from this map. */
     @Override
     public void clear() {
-        throw new UnsupportedOperationException();
+        //This will clear each entry from the linked list
+        for (int i = 0; i < buckets.length; i++) {
+            buckets[i].clear();
+        }
+
+        numberKeys = 0;
     };
 
     /** Returns true if this map contains a mapping for the specified key. */
     public boolean containsKey(K key){
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid key provided");
+        }
+
         throw new UnsupportedOperationException();
     }
 
@@ -131,6 +152,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * map contains no mapping for the key.
      */
     public V get(K key) {
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid key provided");
+        }
         return null;
     }
 
@@ -145,6 +169,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * the old value is replaced.
      */
     public void put(K key, V value) {
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid key provided");
+        }
         throw new UnsupportedOperationException();
     }
 
@@ -160,6 +187,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     //This method does not need to be implemented
     public V remove(K key){
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid key provided");
+        }
         throw new UnsupportedOperationException();
     }
 
@@ -170,18 +200,21 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     //This method does not need to be implemented
     public V remove(K key, V value){
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid key provided");
+        }
         throw new UnsupportedOperationException();
     }
 
     @Override
     public Iterator<K> iterator() {
-        return new HashMapIterator();
+        return new HashMapIter();
     }
 
-    private class HashMapIterator implements Iterator<K> {
+    private class HashMapIter implements Iterator<K> {
         private int index;
 
-        HashMapIterator(){
+        HashMapIter(){
             index = 0;
         }
 
