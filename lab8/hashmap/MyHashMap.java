@@ -163,11 +163,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     @Override
     public void clear() {
         //This will clear each entry from the linked list
-        for (int i = 0; i < buckets.length; i++) {
-            buckets[i].clear();
-        }
-
+        buckets = null;
         n = 0;
+        loadFactor = 0;
     };
 
     /** Returns true if this map contains a mapping for the specified key. */
@@ -176,7 +174,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
             throw new IllegalArgumentException("Invalid key provided");
         }
 
-        throw new UnsupportedOperationException();
+        Set<K> findKey = keySet();
+
+        return findKey.contains(key);
     }
 
     /**
@@ -208,19 +208,24 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * the old value is replaced.
      */
     public void put(K key, V value) {
-        if (key == null) {
-            throw new IllegalArgumentException("Invalid key provided");
+        Node node = getNode(key);
+        //Check if the node exists, then if it does change the current value
+        if (node != null) {
+            node.value = value;
         }
-        Node item = createNode(key, value);
-        int index = determineBucket(key);
-        buckets[index].add(item);
-        n = n + 1;
 
-        double currLoad = n / m;
+        else {
+            int index = determineBucket(key);
+            buckets[index].add(createNode(key, value));
+            n = n + 1;
 
-        if (currLoad >= loadFactor){
+            /*double currLoad = n / m;
+
+            if (currLoad >= loadFactor){
             resize(m);
+            }*/
         }
+
     }
 
     /** Returns a Set view of the keys contained in this map. */
