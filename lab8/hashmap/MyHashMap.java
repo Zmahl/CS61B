@@ -211,11 +211,16 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         if (key == null) {
             throw new IllegalArgumentException("Invalid key provided");
         }
-        //TODO Boolean to check if there is a search that must happen
         Node item = createNode(key, value);
         int index = determineBucket(key);
-        buckets[bucket].add(item);
+        buckets[index].add(item);
         n = n + 1;
+
+        double currLoad = n / m;
+
+        if (currLoad >= loadFactor){
+            resize(m);
+        }
     }
 
     /** Returns a Set view of the keys contained in this map. */
